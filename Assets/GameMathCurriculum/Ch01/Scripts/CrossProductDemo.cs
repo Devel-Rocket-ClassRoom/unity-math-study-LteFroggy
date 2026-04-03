@@ -12,7 +12,7 @@ public class CrossProductDemo : MonoBehaviour
     [Header("=== 대상 설정 ===")]
     [Tooltip("판별할 대상 (비워두면 'Enemy' 태그로 자동 탐색)")]
     [SerializeField] private Transform target;
-
+    
     [Header("=== 시각화 설정 ===")]
     [Tooltip("외적 결과 벡터 시각화 크기")]
     [Range(0.5f, 5f)]
@@ -117,6 +117,7 @@ public class CrossProductDemo : MonoBehaviour
 
     private void UpdateUI()
     {
+        
         if (target == null) return;
 
         string colorTag;

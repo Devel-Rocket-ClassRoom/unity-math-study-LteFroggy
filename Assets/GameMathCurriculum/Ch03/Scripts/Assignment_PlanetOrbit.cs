@@ -47,7 +47,20 @@ public class Assignment_PlanetOrbit : MonoBehaviour {
 
     private void Update()
     {
-        // TODO
+        // 행성 센터 -> 나까지의 거리
+        Vector3 planetOffset = planetOrbitRadius * Vector3.right;
+        // 회전량 => 시간 비례
+        Matrix4x4 planetTRS = Matrix4x4.TRS(orbitCenter + Vector3.up, Quaternion.Euler(0f, planetOrbitSpeed * Time.time, 0f), Vector3.one);
+        // 포지션 설정
+        planetWorldPos = planetTRS.MultiplyPoint(planetOffset);
+        planetWorldPos.y = transform.position.y;
+        transform.position = planetWorldPos;
+        
+        // 위성
+        satelliteLocalPos = satelliteOrbitRadius * Vector3.right;
+        Matrix4x4 satelliteTRS = Matrix4x4.TRS(planetWorldPos, Quaternion.Euler(0f, satelliteOrbitSpeed * Time.time, 0f), Vector3.one);
+        satelliteWorldPos = satelliteTRS.MultiplyPoint(satelliteLocalPos);
+        satellite.position = satelliteWorldPos;
 
         UpdateUI();
     }

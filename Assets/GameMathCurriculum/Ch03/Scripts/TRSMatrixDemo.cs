@@ -4,8 +4,9 @@
 // TRS 행렬 단계별 파이프라인(S→R→T)을 시각화하고 변환 순서 차이를 비교
 // =============================================================================
 
-using UnityEngine;
+using Microsoft.Win32.SafeHandles;
 using TMPro;
+using UnityEngine;
 
 public class TRSMatrixDemo : MonoBehaviour
 {
@@ -45,7 +46,10 @@ public class TRSMatrixDemo : MonoBehaviour
 
     private void Update()
     {
-        // TODO
+        Quaternion rotation = Quaternion.Euler(0f, rotationAngle, 0f);
+        currentTRS = Matrix4x4.TRS(translation, rotation, scale);
+        
+        transformedPoint = currentTRS.MultiplyPoint(baseShape[1]);
 
         UpdateUI();
     }
@@ -63,7 +67,18 @@ public class TRSMatrixDemo : MonoBehaviour
         // 2~3. 중간 단계
         if (showSteps)
         {
-            // TODO
+            // R T S
+            var r = Matrix4x4.Rotate(rotQuat);
+            var t = Matrix4x4.Translate(translation);
+            var s = Matrix4x4.Scale(scale);
+            
+            Matrix4x4 RTS = r * t * s;
+            Color wrongColor = new Color(72, 00, 00);
+            DrawShape(originPos, RTS, wrongColor, "잘못된 순서 (RTS)");
+            
+            Vector3 wrongOrigin = originPos + RTS.MultiplyPoint3x4(Vector3.zero);
+            DrawDashedLine(originPos, wrongOrigin, wrongColor);
+            
         }
 
         // 3. 최종 T × R × S 결과 (초록)

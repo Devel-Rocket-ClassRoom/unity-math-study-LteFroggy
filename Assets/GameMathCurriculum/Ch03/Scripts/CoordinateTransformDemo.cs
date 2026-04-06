@@ -36,7 +36,13 @@ public class CoordinateTransformDemo : MonoBehaviour
     {
         if (childObject == null || worldTarget == null) return;
 
-        // TODO
+        childLocalPos = childObject.localPosition;
+        // TransformPoint는 transform 인스턴스의 좌표계를 기반으로 localPos를 worldPos로 바꿔준다.
+        childWorldPos = transform.TransformPoint(childLocalPos);
+        
+        targetWorldPos = worldTarget.position;
+        // Inverse는 월드포지션을 로컬포지션으로 환산해준다.
+        targetLocalPos = transform.InverseTransformPoint(targetWorldPos);
 
         UpdateUI();
     }

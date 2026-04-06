@@ -4,6 +4,7 @@
 // 삼각함수를 이용한 다양한 탄막 패턴 생성 및 발사
 // =============================================================================
 
+using System.Collections;
 using UnityEngine;
 using TMPro;
 
@@ -65,24 +66,27 @@ public class Assignment_BulletHell : MonoBehaviour
             Debug.LogWarning("[BulletHell] bulletPrefab이 할당되지 않았습니다!");
             return;
         }
-
+        
         for (int i = 0; i < bulletCount; i++)
         {
-            Vector3 direction = patternType switch
-            {
-                PatternType.Circle => CalculateCircleDirection(i, bulletCount),
-                PatternType.Spiral => CalculateSpiralDirection(i, bulletCount),
-                PatternType.Fan => CalculateFanDirection(i, bulletCount),
-                _ => Vector3.forward
-            };
+            if (patternType == PatternType.Spiral) {
+                CalculateSpiralDirection(i, bulletCount);
+            } else {
+                Vector3 direction = patternType switch
+                {
+                    PatternType.Circle => CalculateCircleDirection(i, bulletCount),
+                    PatternType.Fan => CalculateFanDirection(i, bulletCount),
+                    _ => Vector3.forward
+                };
 
-            _stdDegree += Mathf.Rad2Deg * spiralTurnSpeed * Time.deltaTime;
-            
-            GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
-            Rigidbody rb = bullet.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                rb.linearVelocity = direction * bulletSpeed;
+                _stdDegree += Mathf.Rad2Deg * spiralTurnSpeed * Time.deltaTime;
+                
+                GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+                Rigidbody rb = bullet.GetComponent<Rigidbody>();
+                if (rb != null)
+                {
+                    rb.linearVelocity = direction * bulletSpeed;
+                }
             }
         }
     }
@@ -97,14 +101,25 @@ public class Assignment_BulletHell : MonoBehaviour
         return shotDirection;
     }
 
-    private Vector3 CalculateSpiralDirection(int index, int total)
+    private void CalculateSpiralDirection(int index, int total)
     {
-        float shotDegree = _stdDegree + (240f / total * index);
-        float shotRadian = shotDegree * Mathf.Deg2Rad;
+        float waitSecond =  fireInterval / total * index;
         
+        StartCoroutine(CoSpiralShoot(waitSecond));
+    }
+    
+    private IEnumerator CoSpiralShoot(float second) {
+        yield return new WaitForSeconds(second);
+        
+        float shotRadian = spiralTurnSpeed * Time.time;
         Vector3 shotDirection = new Vector3(Mathf.Sin(shotRadian), 0f,  Mathf.Cos(shotRadian));
         
-        return shotDirection;
+        GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+        Rigidbody rb = bullet.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.linearVelocity = shotDirection * bulletSpeed;
+        }
     }
 
     private Vector3 CalculateFanDirection(int index, int total)
@@ -146,7 +161,6 @@ public class Assignment_BulletHell : MonoBehaviour
             Vector3 direction = patternType switch
             {
                 PatternType.Circle => CalculateCircleDirection(i, bulletCount),
-                PatternType.Spiral => CalculateSpiralDirection(i, bulletCount),
                 PatternType.Fan => CalculateFanDirection(i, bulletCount),
                 _ => Vector3.forward
             };

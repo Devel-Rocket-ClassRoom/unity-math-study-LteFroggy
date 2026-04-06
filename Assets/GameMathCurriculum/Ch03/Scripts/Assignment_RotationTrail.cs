@@ -40,10 +40,24 @@ public class Assignment_RotationTrail : MonoBehaviour
 
     private List<Vector3> trailPositions = new List<Vector3>();
     private Vector3 lastTipPos;
+    private float _elapsedTime = 0;
 
     private void Update()
     {
-        // TODO
+        //  수동 돌리기
+        if (!autoRotate) { }
+        // 자동 돌리기
+        else {
+            _elapsedTime += Time.deltaTime;
+            rotationAngle = rotationSpeed * _elapsedTime % 360f; 
+        }
+        
+        Vector3 trailOffset = armLength * (Vector3.left + Vector3.down).normalized;
+        Matrix4x4 trailTRS =  Matrix4x4.TRS(Vector3.zero, Quaternion.Euler(0f, rotationAngle, 0f), Vector3.one);
+        Vector3 newTrailPosition = trailTRS.MultiplyPoint(trailOffset);
+        trailPositions.Add(newTrailPosition);
+        
+        transform.position = newTrailPosition;
         
         UpdateUI();
     }
@@ -57,7 +71,9 @@ public class Assignment_RotationTrail : MonoBehaviour
 
         if (trailPositions.Count > 1)
         {
-            for (int i = 0; i < trailPositions.Count - 1; i++)
+            int drawStartIdx = 1;
+            if (trailPositions.Count >= trailLength) { drawStartIdx = trailPositions.Count - trailLength; }
+            for (int i = drawStartIdx; i < trailPositions.Count - 1; i++)
             {
                 float alpha = (float)i / trailPositions.Count;
                 Color fadeColor = new Color(trailColor.r, trailColor.g, trailColor.b, alpha);

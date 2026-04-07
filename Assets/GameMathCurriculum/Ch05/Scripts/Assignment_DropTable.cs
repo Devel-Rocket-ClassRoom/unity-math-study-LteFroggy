@@ -65,11 +65,31 @@ public class Assignment_DropTable : MonoBehaviour
                 PerformDrop();
             }
         }
+        
+        UpdateUI();
     }
 
     private void PerformDrop()
     {
-        // TODO
+        totalWeight = 0;
+        // 총가중치 먼저 계산
+        foreach (var item in items) {
+            totalWeight += item.weight;
+        }
+        
+        // 값 하나 뽑기
+        float randomValue = Random.Range(0f, totalWeight);
+        
+        float cumulativeSum = 0f;
+        for (int i = 0; i < items.Length; i++) {
+            cumulativeSum += items[i].weight;
+            
+            if (randomValue > cumulativeSum) continue;
+            
+            lastSelectedIndex = i;
+            dropHistory.Add(i);
+            return;
+        }
     }
 
     private void UpdateUI()
@@ -101,14 +121,14 @@ public class Assignment_DropTable : MonoBehaviour
             }
         }
 
-        statsMsg += $"\n[최근 {dropHistory.Count}/{MAX_HISTORY}회]\n";
-        for (int i = 0; i < dropHistory.Count; i++)
+        statsMsg += $"\n[최근 {MAX_HISTORY}/{dropHistory.Count}회]\n";
+        for (int i = dropHistory.Count - 1; i >= dropHistory.Count - MAX_HISTORY; i--)
         {
             if (dropHistory[i] >= 0 && dropHistory[i] < items.Length)
             {
                 DropItem item = items[dropHistory[i]];
                 statsMsg += $"<color=#{ColorUtility.ToHtmlStringRGB(item.color)}>{item.name}</color> ";
-                if ((i + 1) % 5 == 0) statsMsg += "\n";
+                if (i % 5 == 0) statsMsg += "\n";
             }
         }
 

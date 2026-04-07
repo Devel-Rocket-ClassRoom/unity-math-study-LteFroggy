@@ -61,6 +61,8 @@ public class Assignment_GachaSimulator : MonoBehaviour
         {
             PerformHardPityPulls();
         }
+        
+        UpdateUI();
     }
 
     private void PerformSinglePull()
@@ -78,15 +80,36 @@ public class Assignment_GachaSimulator : MonoBehaviour
 
     private void PerformHardPityPulls()
     {
-        while (currentPityCount < hardPity)
-        {
-            ExecutePull();
-        }
+        while (!ExecutePull()) { }
     }
 
-    private void ExecutePull()
-    {
-        // TODO
+    private bool ExecutePull() {
+        // 뽑기 시도
+        currentPityCount++;
+        totalPulls++;
+        float randomValue = Random.Range(0f, 1f);
+        
+        // 현재 시도 횟수 기반으로 성공 확률 계산
+        // 1. softPitty 미만이면, 고정확률 적용
+        if (currentPityCount < softPityStart) { currentEffectiveRate = baseRate; }
+        // 2. softPitty 이상이면, 변동확률 적용
+        else {
+            currentEffectiveRate = Mathf.Lerp(baseRate, 1f, (float)(currentPityCount - softPityStart) / (hardPity - softPityStart));
+        }
+        
+        // 성공 여부 확인
+        if (randomValue <= currentEffectiveRate) {
+            totalSSRs++;
+            ssrPityList.Add(currentPityCount);
+            
+            pullHistory.Add(true);
+            currentPityCount = 0;
+            currentEffectiveRate = baseRate;
+            return true;
+        } else {
+            pullHistory.Add(false);
+            return false;
+        }
     }
 
     private void UpdateUI()
@@ -97,15 +120,15 @@ public class Assignment_GachaSimulator : MonoBehaviour
             $"총 뽑기: {totalPulls}\n" +
             $"획득 SSR: <color=yellow>{totalSSRs}</color>\n" +
             $"현재 천장: {currentPityCount}/{hardPity}\n" +
-            $"유효 확률: <color=cyan>{currentEffectiveRate * 100f:F2}%</color>";
+            $"유효 확률: <color=#00FFFF>{currentEffectiveRate * 100f:F2}%</color>";
 
         if (pullHistoryText == null) return;
 
         string historyMsg = "[최근 뽑기 기록]\n";
-        for (int i = 0; i < pullHistory.Count; i++)
+        for (int i = pullHistory.Count - 1; i >= 0; i--)
         {
             historyMsg += pullHistory[i] ? "<color=yellow>★</color> " : "○ ";
-            if ((i + 1) % 10 == 0) historyMsg += "\n";
+            if ((pullHistory.Count - i) % 10 == 0) historyMsg += "\n";
         }
 
         pullHistoryText.text = historyMsg;
@@ -123,7 +146,7 @@ public class Assignment_GachaSimulator : MonoBehaviour
             averagePity /= ssrPityList.Count;
             expectedMsg += $"평균 천장: {averagePity:F1}\n";
             expectedMsg += $"최근 3회: ";
-            for (int i = 0; i < Mathf.Min(3, ssrPityList.Count); i++)
+            for (int i = ssrPityList.Count - 1; i >= Mathf.Max(0, ssrPityList.Count - 3); i--)
             {
                 expectedMsg += $"{ssrPityList[i]} ";
             }
@@ -137,7 +160,7 @@ public class Assignment_GachaSimulator : MonoBehaviour
         float avgRate = (baseRate + currentEffectiveRate) / 2f;
         if (avgRate > 0)
         {
-            float expectedPulls = (hardPity - currentPityCount) / avgRate;
+            float expectedPulls = 1f / avgRate;
             expectedMsg += $"예상 뽑기: {expectedPulls:F0}회";
         }
 

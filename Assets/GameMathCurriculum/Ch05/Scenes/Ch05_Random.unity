@@ -178,8 +178,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 55aa32ed9e380e34abc92f2c398a3f97, type: 2}
-  m_sharedMaterial: {fileID: -2253834616945413019, guid: 55aa32ed9e380e34abc92f2c398a3f97, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 2bc93ca84079eb942b6b5bb65e26abdf, type: 2}
+  m_sharedMaterial: {fileID: 3677978402969192886, guid: 2bc93ca84079eb942b6b5bb65e26abdf, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -480,6 +480,10 @@ PrefabInstance:
       value: SpawnArea
       objectReference: {fileID: 0}
     - target: {fileID: 5077378053681894756, guid: ca30d10566587cc45ab6bbf1b9b5934f, type: 3}
+      propertyPath: seed
+      value: 1112
+      objectReference: {fileID: 0}
+    - target: {fileID: 5077378053681894756, guid: ca30d10566587cc45ab6bbf1b9b5934f, type: 3}
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
@@ -487,6 +491,14 @@ PrefabInstance:
       propertyPath: uiInfoText
       value: 
       objectReference: {fileID: 499017932}
+    - target: {fileID: 5077378053681894756, guid: ca30d10566587cc45ab6bbf1b9b5934f, type: 3}
+      propertyPath: cellSpacing
+      value: 1.49
+      objectReference: {fileID: 0}
+    - target: {fileID: 5077378053681894756, guid: ca30d10566587cc45ab6bbf1b9b5934f, type: 3}
+      propertyPath: debugPreviousSeed
+      value: 1112
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -549,15 +561,15 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "<b>[RandomBasics]</b>\n\uC2DC\uB4DC: <color=yellow>12345</color>\n\uADF8\uB9AC\uB4DC
+  m_text: "<b>[RandomBasics]</b>\n\uC2DC\uB4DC: <color=yellow>1112</color>\n\uADF8\uB9AC\uB4DC
     \uD06C\uAE30: 10\xD710\n\uB192\uC774 \uBC30\uC728: 1.00\n\n<b>\uD1B5\uACC4 \uC815\uBCF4:</b>\n\uCD5C\uC18C\uAC12:
     <color=blue>340282300000000000000000000000000000000.000</color>\n\uCD5C\uB300\uAC12:
     <color=red>-340282300000000000000000000000000000000.000</color>\n\uD3C9\uADE0\uAC12:
     <color=green>0.000</color>\n\n<b>\uC6D0\uB9AC:</b>\n<size=80%>Random.InitState(seed)\uB85C\n\uAC19\uC740
     \uC2DC\uB4DC = \uAC19\uC740 \uB09C\uC218 \uC218\uC5F4</size>"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 55aa32ed9e380e34abc92f2c398a3f97, type: 2}
-  m_sharedMaterial: {fileID: -2253834616945413019, guid: 55aa32ed9e380e34abc92f2c398a3f97, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 2bc93ca84079eb942b6b5bb65e26abdf, type: 2}
+  m_sharedMaterial: {fileID: 3677978402969192886, guid: 2bc93ca84079eb942b6b5bb65e26abdf, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -967,8 +979,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 55aa32ed9e380e34abc92f2c398a3f97, type: 2}
-  m_sharedMaterial: {fileID: -2253834616945413019, guid: 55aa32ed9e380e34abc92f2c398a3f97, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 2bc93ca84079eb942b6b5bb65e26abdf, type: 2}
+  m_sharedMaterial: {fileID: 3677978402969192886, guid: 2bc93ca84079eb942b6b5bb65e26abdf, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1470,7 +1482,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3441839997501775134, guid: a7ecebbfa3d583341bd4556bc1bf8f15, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3441839997501775134, guid: a7ecebbfa3d583341bd4556bc1bf8f15, type: 3}
       propertyPath: statusText

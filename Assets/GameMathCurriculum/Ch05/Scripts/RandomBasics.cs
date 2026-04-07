@@ -60,7 +60,7 @@ public class RandomBasics : MonoBehaviour
         gridValues = new float[gridSize, gridSize];
         gridColors = new Color[gridSize, gridSize];
 
-        // TODO
+        Random.InitState(seed);
 
         float minVal = float.MaxValue;
         float maxVal = float.MinValue;
@@ -70,12 +70,8 @@ public class RandomBasics : MonoBehaviour
         {
             for (int x = 0; x < gridSize; x++)
             {
-                // TODO
-                float randomValue = 0f;
-                gridValues[x, y] = 0f;
-
-                // TODO
-
+                float randomValue = randomValue = Random.value;
+                gridValues[x, y] = randomValue * heightScale;
                 gridColors[x, y] = GetHeightColor(randomValue);
             }
         }

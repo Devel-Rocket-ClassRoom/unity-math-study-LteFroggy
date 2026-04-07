@@ -4,6 +4,7 @@
 // SmoothDamp로 부드러운 3인칭 카메라 팔로우와 줌 인/아웃을 구현하는 시스템
 // =============================================================================
 
+using System;
 using UnityEngine;
 using TMPro;
 public class Assignment_SmoothCamera : MonoBehaviour
@@ -74,7 +75,31 @@ public class Assignment_SmoothCamera : MonoBehaviour
     {
         if (target == null) return;
 
-        // TODO
+        // 1. 입력 받고, 클램핑
+        float wheel = Input.GetAxis("Mouse ScrollWheel");
+        targetZoomDistance -= zoomSpeed * wheel;
+        targetZoomDistance = Mathf.Clamp(targetZoomDistance, minZoomDistance, maxZoomDistance);
+        
+        // 2. 현재 줌 거리를 목표 줌 거리로 부드럽게 이동
+        currentZoomDistance = Mathf.SmoothDamp(currentZoomDistance, targetZoomDistance, ref zoomVelocity, zoomSmoothTime);
+        
+        // 3. 카메라 목표 위치 계산
+        Vector3 targetPos = target.position + (offset * currentZoomDistance);
+        
+        // 4. 카메라 위치를 부드럽게 이동
+        transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref currentSmoothVelocity, positionSmoothTime);
+        
+        // 5-1. 목표 방향 벡터 구하기
+        Vector3 directionVector = target.position - transform.position;
+        // 5-2. 목표한 회전 찾기
+        Quaternion targetRotation = Quaternion.LookRotation(directionVector);
+        // 5-3. 회전
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSmoothSpeed);
+        // 5-4. 보간 완료 처리
+        float quaternionDiff = Quaternion.Angle(transform.rotation, targetRotation);
+        if (quaternionDiff <= 0.1f) {
+            transform.rotation = targetRotation;
+        }
 
         UpdateUI();
     }

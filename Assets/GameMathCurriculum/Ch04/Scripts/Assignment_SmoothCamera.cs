@@ -95,7 +95,7 @@ public class Assignment_SmoothCamera : MonoBehaviour
         Quaternion targetRotation = Quaternion.LookRotation(directionVector);
         // 5-3. 회전
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSmoothSpeed);
-        // 5-4. 보간 완료 처리
+        // 5-4. 보간 완료 처리 
         float quaternionDiff = Quaternion.Angle(transform.rotation, targetRotation);
         if (quaternionDiff <= 0.1f) {
             transform.rotation = targetRotation;

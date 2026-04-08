@@ -41,7 +41,9 @@ public class Assignment_PatrolGuard : MonoBehaviour
 
     private void Start()
     {
-        // TODO
+        currentWaypointIndex = 0;
+        // 초기 방향 설정
+        targetRotation = Quaternion.Euler(0f, startYAngle, 0f);
     }
 
     private void Update()
@@ -53,10 +55,13 @@ public class Assignment_PatrolGuard : MonoBehaviour
         dirToNext.y = 0f;
         dirToNext.Normalize();
         distanceToNext = Vector3.Distance(transform.position, target.position);
-
-        // TODO
-
-        // TODO
+        
+        // Quaternion.FromToRotation() — 두 방향 벡터 사이 회전 계산
+        // 사이 회전을 계산했으니, 원래 회전에 더해서 그 쪽 방향을 target으로 잡아야 함
+        targetRotation = Quaternion.FromToRotation(transform.forward, dirToNext) * transform.rotation;
+        // Quaternion.RotateTowards() — 일정 각속도로 회전
+        // 현재 위치에서 목표 회전으로, 한번에 최대 turnSpeed * deltaTime만큼만 회전
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, turnSpeed * Time.deltaTime);
 
         // 이동 (제공됨 — 수정 불필요)
         transform.position += transform.forward * moveSpeed * Time.deltaTime;

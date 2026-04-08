@@ -30,6 +30,11 @@ public class Assignment_CircularFormation : MonoBehaviour
 
     [Tooltip("리더로부터 유닛까지의 거리 (원의 반지름)")]
     [SerializeField] [UnityEngine.Range(1f, 10f)] private float formationRadius = 3f;
+    
+    [Header("=== 회전 설정 ===")]
+    [Tooltip("Rad값 기준")]
+    [UnityEngine.Range(0f, 2f)]
+    [SerializeField] private float _rotationSpeed = 3f;
 
     [Header("=== UI 연결 ===")]
     [SerializeField] private TMP_Text uiInfoText;
@@ -38,6 +43,7 @@ public class Assignment_CircularFormation : MonoBehaviour
     [SerializeField] private int currentUnitCount;
     [SerializeField] private Vector3 leaderRotationEuler;
     
+    private float _stdRotation = 0f;
     private Transform[] units;
 
     private void Awake() {
@@ -71,7 +77,10 @@ public class Assignment_CircularFormation : MonoBehaviour
             
             // 1~3. 원형 균등 배치, 진형 이동, 진형 회전
             // 나로부터 몇 도?
-            float angle = 360f / units.Length * i;
+            
+            _stdRotation += (_rotationSpeed * Mathf.Rad2Deg) * Mathf.PI * Time.deltaTime;
+            _stdRotation %= 360f;
+            float angle = 360f / units.Length * i + _stdRotation;
             // 그쪽으로 가는 방향 구하기
             Quaternion unitRotation = Quaternion.AngleAxis(angle, leader.up);
             // 특정 위치만큼 떨어트리기

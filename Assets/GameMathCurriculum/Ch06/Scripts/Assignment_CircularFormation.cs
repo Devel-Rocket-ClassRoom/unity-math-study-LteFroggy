@@ -9,8 +9,14 @@
 //    - 쿼터니언 * 벡터: 배치 쿼터니언 * Vector3.forward * radius → 오프셋 위치
 // =============================================================================
 
+using System;
+using System.Numerics;
+using NUnit.Framework;
 using UnityEngine;
 using TMPro;
+using Unity.VisualScripting;
+using Quaternion = UnityEngine.Quaternion;
+using Vector3 = UnityEngine.Vector3;
 
 public class Assignment_CircularFormation : MonoBehaviour
 {
@@ -18,11 +24,12 @@ public class Assignment_CircularFormation : MonoBehaviour
     [Tooltip("진형의 중심이 될 리더 오브젝트")]
     [SerializeField] private Transform leader;
 
-    [Tooltip("원형으로 배치할 유닛들의 Transform 배열")]
-    [SerializeField] private Transform[] units;
+    [Tooltip("원형으로 배치할 유닛들의 갯수")]
+    [SerializeField] private int _unitCount;
+    [SerializeField] private GameObject unitPrefab;
 
     [Tooltip("리더로부터 유닛까지의 거리 (원의 반지름)")]
-    [SerializeField] [Range(1f, 10f)] private float formationRadius = 3f;
+    [SerializeField] [UnityEngine.Range(1f, 10f)] private float formationRadius = 3f;
 
     [Header("=== UI 연결 ===")]
     [SerializeField] private TMP_Text uiInfoText;
@@ -30,6 +37,15 @@ public class Assignment_CircularFormation : MonoBehaviour
     [Header("=== 디버그 정보 (읽기 전용) ===")]
     [SerializeField] private int currentUnitCount;
     [SerializeField] private Vector3 leaderRotationEuler;
+    
+    private Transform[] units;
+
+    private void Awake() {
+        units = new Transform[_unitCount];
+        for (int i = 0; i < _unitCount; i++) {
+            units[i] = Instantiate(unitPrefab).transform;
+        }
+    }
 
     private void Update()
     {
@@ -46,11 +62,25 @@ public class Assignment_CircularFormation : MonoBehaviour
         {
             if (units[i] == null) continue;
 
-            // TODO
-
-            // TODO
-
-            // TODO
+            // 1. 유닛들을 리더 주위에 원형으로 균등 배치한다
+            // 2. 리더가 이동하면 진형이 함께 이동한다
+            // 3. 리더가 회전하면 진형 전체가 함께 회전한다
+            // 4. 각 유닛은 리더 기준 바깥 방향을 바라본다
+            //
+            // **사용 API:** `Quaternion.AngleAxis`, 쿼터니언 곱(`*`), 쿼터니언 × 벡터(`Quaternion * Vector3`)
+            
+            // 1~3. 원형 균등 배치, 진형 이동, 진형 회전
+            // 나로부터 몇 도?
+            float angle = 360f / units.Length * i;
+            // 그쪽으로 가는 방향 구하기
+            Quaternion unitRotation = Quaternion.AngleAxis(angle, leader.up);
+            // 특정 위치만큼 떨어트리기
+            Vector3 location = leader.position + (unitRotation * leader.forward * formationRadius);
+            units[i].position = location;
+            
+            // 4. 각 유닛은 리더 기준 바깥쪽 보기
+            Vector3 leaderVec = units[i].position - leader.position;
+            units[i].rotation = Quaternion.LookRotation(leaderVec, leader.up);
         }
 
         UpdateUI();

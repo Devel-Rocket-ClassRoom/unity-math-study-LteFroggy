@@ -38,8 +38,16 @@ public class LookRotationDemo : MonoBehaviour
                 target = targetObj.transform;
         }
 
-        // TODO
-
+        Vector3 toTarget = (target.position - transform.position).normalized;
+        targetRotation = Quaternion.LookRotation(toTarget, Vector3.up);
+        angleDifference = Quaternion.Angle(transform.rotation, targetRotation);
+        
+        transform.rotation = useSlerp ? 
+                            Quaternion.Slerp(transform.rotation, targetRotation, turnSpeed * Time.deltaTime) :
+                            targetRotation;
+                            
+        slerpProgress = useSlerp ? 1f : 1f - Mathf.Clamp01(angleDifference / 180f);
+        
         UpdateUI();
     }
 

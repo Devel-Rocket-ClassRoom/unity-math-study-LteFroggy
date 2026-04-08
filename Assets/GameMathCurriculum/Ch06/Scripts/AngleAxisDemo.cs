@@ -4,6 +4,7 @@
 // 임의의 축과 각도로 쿼터니언 회전을 생성하고 시각화합니다.
 // =============================================================================
 
+using System.Net.Http.Headers;
 using UnityEngine;
 using TMPro;
 
@@ -31,7 +32,19 @@ public class AngleAxisDemo : MonoBehaviour
 
     private void Update()
     {
-        // TODO
+        if (autoRotate) {
+            accumulatedAngle += rotateSpeed * Time.deltaTime;
+            accumulatedAngle %= 360f;
+            currentAngle = accumulatedAngle;
+        } else {
+            accumulatedAngle += rotationAngle;
+            currentAngle = rotationAngle;
+        }
+        
+        Quaternion angleAxisQuat = Quaternion.AngleAxis(currentAngle, rotationAxis.normalized);
+        transform.rotation = angleAxisQuat;
+        
+        currentQuaternion = new Vector4(angleAxisQuat.x, angleAxisQuat.y, angleAxisQuat.z, angleAxisQuat.w);
 
         UpdateUI();
     }

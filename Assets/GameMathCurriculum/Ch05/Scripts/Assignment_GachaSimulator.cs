@@ -34,7 +34,7 @@ public class Assignment_GachaSimulator : MonoBehaviour
     [SerializeField] private float currentEffectiveRate;
     [SerializeField] private List<bool> pullHistory = new List<bool>();
     [SerializeField] private List<int> ssrPityList = new List<int>();
-    private const int MAX_HISTORY = 30;
+    private const int MAX_HISTORY = 100;
 
     private void Start()
     {
@@ -81,6 +81,7 @@ public class Assignment_GachaSimulator : MonoBehaviour
     private void PerformHardPityPulls()
     {
         while (!ExecutePull()) { }
+        while (currentPityCount < 87) { ExecutePull(); }
     }
 
     private bool ExecutePull() {
@@ -100,16 +101,27 @@ public class Assignment_GachaSimulator : MonoBehaviour
         // 성공 여부 확인
         if (randomValue <= currentEffectiveRate) {
             totalSSRs++;
-            ssrPityList.Add(currentPityCount);
+            ssrPityList.Enqueue(currentPityCount);
+            UpdatePityList();
             
-            pullHistory.Add(true);
+            pullHistory.Enqueue(true);
+            UpdateHistory();
             currentPityCount = 0;
             currentEffectiveRate = baseRate;
             return true;
         } else {
-            pullHistory.Add(false);
+            pullHistory.Enqueue(false);
+            UpdateHistory();
             return false;
         }
+    }
+    
+    private void UpdateHistory() {
+        while (pullHistory.Count > MAX_HISTORY) { pullHistory.Dequeue(); }
+    }
+    
+    private void UpdatePityList() {
+        while (ssrPityList.Count > MAX_HISTORY) { ssrPityList.Dequeue();}
     }
 
     private void UpdateUI()
@@ -139,16 +151,17 @@ public class Assignment_GachaSimulator : MonoBehaviour
         if (ssrPityList.Count > 0)
         {
             float averagePity = 0f;
+            var ssrPityArr = ssrPityList.ToArray();
             for (int i = 0; i < ssrPityList.Count; i++)
             {
-                averagePity += ssrPityList[i];
+                averagePity += ssrPityArr[i];
             }
             averagePity /= ssrPityList.Count;
             expectedMsg += $"평균 천장: {averagePity:F1}\n";
             expectedMsg += $"최근 3회: ";
             for (int i = ssrPityList.Count - 1; i >= Mathf.Max(0, ssrPityList.Count - 3); i--)
             {
-                expectedMsg += $"{ssrPityList[i]} ";
+                expectedMsg += $"{ssrPityArr[i]} ";
             }
         }
         else

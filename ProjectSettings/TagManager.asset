@@ -10,6 +10,7 @@ TagManager:
   - Selectable
   - Unit
   - Ground
+  - Canvas
   layers:
   - Default
   - TransparentFX

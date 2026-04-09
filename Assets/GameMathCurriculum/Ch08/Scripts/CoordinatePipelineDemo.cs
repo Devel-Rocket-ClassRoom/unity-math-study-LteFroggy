@@ -47,7 +47,14 @@ public class CoordinatePipelineDemo : MonoBehaviour
 
     private void Update()
     {
-        // TODO
+        screenCoord = Input.mousePosition;
+        viewportCoord = cam.ScreenToViewportPoint(screenCoord);
+        ndcCoord = new Vector2(viewportCoord.x * 2 - 1, viewportCoord.y * 2 - 1);
+        
+        Vector3 screenPointWithDepth = screenCoord;
+        screenPointWithDepth.z = worldDepth;
+        worldCoord = cam.ScreenToWorldPoint(screenPointWithDepth);
+        
         UpdateUI();
     }
 

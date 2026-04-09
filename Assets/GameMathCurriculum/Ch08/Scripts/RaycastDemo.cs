@@ -61,8 +61,26 @@ public class RaycastDemo : MonoBehaviour
 
     private void Update()
     {
-       // TODO
-
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        
+        if (Physics.Raycast(ray, out RaycastHit hit, maxRayDistance)) {
+            isHitting = true;
+            lastHit = hit;
+            
+            // 선택
+            if (Input.GetMouseButtonDown(0)) {
+                TrySelectObject(hit);                
+            } 
+            
+            // 배치
+            if (Input.GetMouseButtonDown(1)) {
+                TryPlaceObject(hit);                
+            }
+            
+        } else {
+            isHitting = false;
+        }
+        
         UpdateUI();
     }
 
@@ -97,7 +115,15 @@ public class RaycastDemo : MonoBehaviour
 
     private void TryPlaceObject(RaycastHit hit)
     {
-        // TODO
+        if (!selectedObject) { return; }
+        if (!hit.collider.CompareTag(groundTag)) { return; }
+        
+        // 바닥면일테니, 위로 offset만큼 올려주기
+        Vector3 placePos = hit.point + Vector3.up * placeOffsetY;
+        GameObject newGo = Instantiate(selectedObject, placePos, selectedObject.transform.rotation);
+        newGo.tag = "Untagged";
+        newGo.GetComponent<Renderer>().material.color = Color.cyan;
+        newGo.name = "Placed Object";
 
         Debug.Log($"[RaycastDemo] 배치됨: {hit.point}");
     }

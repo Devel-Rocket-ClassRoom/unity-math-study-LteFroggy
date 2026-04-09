@@ -73,7 +73,18 @@ public class ScreenToWorldDemo : MonoBehaviour
 
     private void Update()
     {
-        // TODO
+        currentScreenPos = Input.mousePosition;
+        
+        var currentScreenPosWithDepth = currentScreenPos;
+        currentScreenPosWithDepth.z = distanceFromCamera;
+        
+        currentWorldPos = cam.ScreenToWorldPoint((currentScreenPosWithDepth));
+        cursorFollower.position = currentWorldPos;
+        
+        if (Input.GetMouseButton(0)) {
+             SpawnObject(currentWorldPos);
+        }
+        
         UpdateUI();
     }
 

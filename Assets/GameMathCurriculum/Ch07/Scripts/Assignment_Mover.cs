@@ -5,8 +5,6 @@ using Random = UnityEngine.Random;
 
 public class Assignment_Mover : MonoBehaviour
 {
-    [Header("=== Mover가 사용 가능한 Material 목룍 ===")]
-    [SerializeField] private Material[] _materials;
     
     private Vector3 _p0;
     private Vector3 _p1;
@@ -20,15 +18,17 @@ public class Assignment_Mover : MonoBehaviour
 
     private void Awake() {
         _renderer = GetComponent<Renderer>();
-        _renderer.material = _materials[Random.Range(0, _materials.Length)];
     }
 
-    public void Init(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float duration) {
+    public void Init(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float duration, float scale, Material material) {
         _p0 = p0;
         _p1 = p1;
         _p2 = p2;
         _p3 = p3;
         _duration = duration;
+        _renderer.material = material;
+        
+        transform.localScale =  new Vector3(scale, scale, scale);
         
         _t = 0f;
     }

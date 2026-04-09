@@ -29,20 +29,19 @@ public class Assignment_SplineConveyor : MonoBehaviour
     [SerializeField] private TMP_Text uiInfoText;
 
     [Header("=== 디버그 정보 (읽기 전용) ===")]
-    [SerializeField] private float globalT;
+    [SerializeField] private float globalT = 0f;
     [SerializeField] private float currentSpeedMultiplier;
-    
-    [Header("=== 개발용 임시값 ===")]
-    [SerializeField]
-    private float _speed = 0.2f;
+    [SerializeField] private float globalTRepeated;
     
     private void Update()
     {
-        float speedMultiplier = speedCurve.Evaluate(Mathf.Repeat(globalT, speedCurve.keys[1].time));
-        globalT += speedMultiplier * Time.deltaTime / cycleDuration;
+        globalTRepeated = Mathf.PingPong(Time.time, speedCurve.keys[speedCurve.length - 1].time);
+        currentSpeedMultiplier = speedCurve.Evaluate(globalTRepeated);
+        globalT += currentSpeedMultiplier * Time.deltaTime / cycleDuration;
         
         // 각 박스의 위치 움직이기
         for (int i = 0; i < boxes.Length; i++) {  
+            // 일정 간격을 두고 움직이도록 offset 추가
             float offset = 1.0f / boxes.Length * i;
             boxes[i].position = EvaluateSpline(waypoints, Mathf.Repeat(globalT + offset, 1f));
         }

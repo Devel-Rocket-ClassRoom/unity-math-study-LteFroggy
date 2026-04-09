@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using TMPro;
 
@@ -86,6 +87,7 @@ public class BezierCurveDemo : MonoBehaviour
             BezierType.Linear => LinearBezier(t),
             BezierType.Quadratic => QuadraticBezier(t),
             BezierType.Cubic => CubicBezier(t),
+            _ => throw new ArgumentOutOfRangeException()
         };
     }
 

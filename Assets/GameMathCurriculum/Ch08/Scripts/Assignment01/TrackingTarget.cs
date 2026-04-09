@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class Target : MonoBehaviour {
+public class TrackingTarget : MonoBehaviour {
 	public Color TargetColor;
 
 	private void Awake() {

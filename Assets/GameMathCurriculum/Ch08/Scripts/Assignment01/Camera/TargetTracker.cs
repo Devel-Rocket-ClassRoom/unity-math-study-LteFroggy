@@ -2,8 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class TargetTracker : MonoBehaviour {
-	private Target[] _targets;
-	private RectTransform[] _indicators; 
+	private TrackingTarget[] _targets;
+	private RectTransform[] _indicators;
 	private Camera _camera;
 	private GameObject _canvas;
 	
@@ -22,12 +22,12 @@ public class TargetTracker : MonoBehaviour {
 		var targets = GameObject.FindGameObjectsWithTag(Tags.Target);
 		
 		// 찾은 타겟 개수만큼 초기화
-		_targets = new Target[targets.Length];
+		_targets = new TrackingTarget[targets.Length];
 		_showingState = new string[_targets.Length];
 		_indicators = new RectTransform[_targets.Length];
 		
 		for (int i = 0; i < targets.Length; i++) {
-			_targets[i] = targets[i].GetComponent<Target>();
+			_targets[i] = targets[i].GetComponent<TrackingTarget>();
 			
 			// 찾은 타겟 개수만큼 Indicator 생성
 			// 1. Image Object 생성 -> RectTransform, CanvasRenderer, Image 3개가 붙어있어야 함.
@@ -77,7 +77,7 @@ public class TargetTracker : MonoBehaviour {
 				else if (targetPoint.x >= Screen.width) { indicatorXLoc = Screen.width; } 
 				else { indicatorXLoc = targetPoint.x; }
 				if (targetPoint.y <= 0) { indicatorYLoc = 0f; } 
-				else if (targetPoint.y >= Screen.width) { indicatorYLoc = Screen.width; } 
+				else if (targetPoint.y >= Screen.height) { indicatorYLoc = Screen.height; } 
 				else { indicatorYLoc = targetPoint.y; }
 				
 				// 현재 위치에 따라 피벗 위치 수정해주기
